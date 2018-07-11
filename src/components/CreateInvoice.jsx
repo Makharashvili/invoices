@@ -1,5 +1,7 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+
 import {createInvoice} from '../actions/invoices'
 
 class Invoices extends React.Component {
@@ -12,7 +14,13 @@ class Invoices extends React.Component {
   }
 
   handleCreateClick = () => {
-    this.props.createInvoice(this.state)
+    this.props.createInvoice(
+      this.state,
+      {
+        resolve: () => { this.props.history.push('/user/5b40df1cf5906f2cc011dd46/invoices') },
+        reject: () => {},
+      }
+    )
   }
 
   render(){
@@ -51,4 +59,4 @@ const mapStateToProps = state => ({
   loading: state.invoices.loading,
 })
 
-export default connect(mapStateToProps, { createInvoice })(Invoices)
+export default withRouter(connect(mapStateToProps, { createInvoice })(Invoices))

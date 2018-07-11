@@ -1,4 +1,3 @@
-import { delay } from 'redux-saga'
 import { takeEvery, call, put } from 'redux-saga/effects'
 import axios from 'axios'
 
@@ -15,22 +14,44 @@ function* createInvoice(action) {
     const { data } = yield call(axios.post, 'http://localhost:7070/invoices/create', params)
     if(data.success){
       yield put(actions.invoiceCreated())
+      action.meta.resolve()
+
     }
   } catch(error) {
     yield put(actions.invoiceCreatedFailed())
     console.log(error)
   }
 }
-
 export function* createInvoiceWatcher() {
   yield takeEvery(actionTypes.CREATE_INVOICE, createInvoice)
 }
 
+function* createInvoiceDetail(action) {
+  try {
+    const params = {
+      ...action.payload,
+      userId: '5b40df1cf5906f2cc011dd46',
+    }
+
+    const { data } = yield call(axios.post, `http://localhost:7070/invoices/${action.payload.invoiceId}/details/create`, params)
+    if(data.success){
+      yield put(actions.invoiceDetailCreated())
+      action.meta.resolve()
+
+    }
+  } catch(error) {
+    yield put(actions.invoiceDetailCreatedFailed())
+    console.log(error)
+  }
+}
+export function* createInvoiceDetailWatcher() {
+  yield takeEvery(actionTypes.CREATE_INVOICE_DETAIL, createInvoiceDetail)
+}
+
 function* fetchUserInvoices(action) {
   try {
-    yield call(delay, 1000)
     const { data } = yield call(axios.get, `http://localhost:7070/users/${action.payload.userId}/invoices`)
-  
+
     if (data.success) {
       yield put(actions.userInvoicesFetched(data.items))
     }
@@ -41,4 +62,88 @@ function* fetchUserInvoices(action) {
 
 export function* fetchUserInvoicesWatcher() {
   yield takeEvery(actionTypes.FETCH_USER_INVOICES, fetchUserInvoices)
+}
+
+function* fetchUserInvoiceDetails(action) {
+  try {
+    console.log('hereeeeeeeeeeee')
+    const { data } = yield call(axios.get, `http://localhost:7070/invoices/${action.payload.invoiceId}/details`)
+    if (data.success) {
+      yield put(actions.userInvoiceDetailsFetched(data.items))
+    }
+  } catch (error) {
+    yield put(actions.userInvoiceDetailFetchFailed(error))
+  }
+}
+
+export function* fetchUserInvoiceDetailsWatcher() {
+  yield takeEvery(actionTypes.FETCH_USER_INVOICE_DETAILS, fetchUserInvoiceDetails)
+}
+
+function* deleteUserInvoice(action){
+  try{
+    const { data } = yield call(axios.delete, `http://localhost:7070/invoices/${action.payload.invoiceId}/delete`)
+    if(data.success){
+      action.meta.resolve()
+    }
+  } catch(error){
+
+  }
+}
+
+export function* deleteUserInvoiceWatcher() {
+  yield takeEvery(actionTypes.USER_INVOICE_DELETE, deleteUserInvoice)
+}
+
+function* deleteUserInvoiceDetail(action){
+  try{
+    const { data } = yield call(axios.delete, `http://localhost:7070/invoices/details/${action.payload.invoiceDetailId}/delete`)
+    if(data.success){
+      action.meta.resolve()
+    }
+  } catch(error){
+
+  }
+}
+
+export function* deleteUserInvoiceDetailWatcher() {
+  yield takeEvery(actionTypes.USER_INVOICE_DETAIL_DELETE, deleteUserInvoiceDetail)
+}
+
+
+function* getUserInvoice(action){
+  try{
+    const { data } = yield call(axios.get, `http://localhost:7070/invoices/${action.payload.invoiceId}`)
+    yield put(actions.getUserInvoiceFetched(data))
+  } catch(error){
+
+  }
+}
+
+export function* getUserInvoiceWatcher() {
+  yield takeEvery(actionTypes.USER_INVOICE_GET, getUserInvoice)
+}
+
+function* getUserInvoiceDetail(action){
+  try{
+    const { data } = yield call(axios.get, `http://localhost:7070/invoices/detail/${action.payload.invoiceDetailId}`)
+    yield put(actions.getUserInvoiceDetailFetched(data))
+  } catch(error){
+
+  }
+}
+
+export function* getUserInvoiceDetailWatcher() {
+  yield takeEvery(actionTypes.USER_INVOICE_DETAIL_GET, getUserInvoiceDetail)
+}
+
+function* saveUserInvoice(action){
+  const { data } = yield call(axios.put, `http://localhost:7070/invoices/${action.payload.invoiceId}/edit`, action)
+  if (data.success) {
+    action.meta.resolve()
+  }
+}
+
+export function* saveUserInvoiceWatcher() {
+  yield takeEvery(actionTypes.USER_INVOICE_EDIT_SAVE, saveUserInvoice)
 }

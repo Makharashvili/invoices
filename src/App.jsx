@@ -8,6 +8,8 @@ import Invoices from './components/CreateInvoice'
 import UserInvoices from './components/UserInvoices'
 import InvoiceDetails from './components/InvoiceDetails'
 import EditInvoice from './components/EditInvoice'
+import CreateInvoiceDetail from './components/CreateInvoiceDetail'
+import EditInvoiceDetail from './components/EditInvoiceDetail'
 
 class App extends Component {
   render() {
@@ -24,8 +26,10 @@ class App extends Component {
           <Route path="/register" component={Register} />
           <Route path="/invoices/create" component={Invoices} />
           <Route path="/user/:id/invoices" component={UserInvoices} />
-          <Route path="/invoices/:id/details" component={InvoiceDetails} />
-          <Route path="/invoices/:id/edit" component={EditInvoice} />
+          <Route exact path="/invoices/:id/details" component={InvoiceDetails} />
+          <Route exact path="/invoices/:id/details/create" component={CreateInvoiceDetail} />
+          <Route exact path="/invoices/:invoiceId/details/:invoiceDetailId/edit" component = {EditInvoiceDetail} />
+          <Route exact path="/invoices/:id/edit" component={EditInvoice} />
 
           <MyNotification />
         </div>
