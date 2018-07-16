@@ -42,14 +42,14 @@ export const invoiceDetailCreatedFailed = () => ({
   type: actionTypes.CREATE_INVOICE_DETAIL_FAILED,
 })
 
-export const fetchUserInvoices = ({ userId }) => ({
+export const fetchUserInvoices = ({ userId, page }) => ({
   type: actionTypes.FETCH_USER_INVOICES,
-  payload: { userId },
+  payload: { userId, page },
 })
 
-export const fetchUserInvoiceDetails = ({ invoiceId }) => ({
+export const fetchUserInvoiceDetails = ({ invoiceId, page }) => ({
   type: actionTypes.FETCH_USER_INVOICE_DETAILS,
-  payload: { invoiceId }
+  payload: { invoiceId, page }
 })
 
 export const userInvoicesFetched = invoices => ({
@@ -84,9 +84,9 @@ export const userInvoiceDetailDelete = ( {invoiceDetailId}, meta ) => ({
   meta
 })
 
-export const getUserInvoice = ( {invoiceId} ) => ({
+export const getUserInvoice = ({ invoiceId }) => ({
   type: actionTypes.USER_INVOICE_GET,
-  payload: {invoiceId},
+  payload: { invoiceId },
 })
 
 export const getUserInvoiceDetail = ( {invoiceDetailId} ) => ({

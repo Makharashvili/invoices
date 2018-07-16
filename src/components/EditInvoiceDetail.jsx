@@ -35,7 +35,7 @@ class EditInvoiceDetail extends React.Component{
 
   handleSaveClick = () => {
     const { invoiceId, invoiceDetailId } = this.props.match.params
-
+    this.state.invoiceDetailId = invoiceDetailId
     this.props.saveUserInvoiceDetail(
       this.state,
       {

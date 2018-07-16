@@ -10,7 +10,10 @@ class InvoiceDetails extends React.Component{
   }
 
   fetchUserInvoiceDetails = () => {
-    this.props.fetchUserInvoiceDetails({ invoiceId: this.props.match.params.id })
+    const { id } = this.props.match.params
+    const { page } = this.props
+
+    this.props.fetchUserInvoiceDetails({ invoiceId: id, page })
   }
 
   deleteInvoiceDetail = invoiceDetailId => () => {
@@ -51,6 +54,10 @@ class InvoiceDetails extends React.Component{
             </div>
           ))}
           <Link to={`/invoices/${this.props.match.params.id}/details/create`}>create new detail</Link>
+
+          <br /><br />
+
+          {invoiceDetails.length % 5 === 0 && <button onClick={this.fetchUserInvoiceDetails}>Load More</button>}
         </div>
     </div>
     )
@@ -60,6 +67,7 @@ class InvoiceDetails extends React.Component{
 const mapStateToProps = state => ({
   invoiceDetails: state.invoiceDetails.items,
   fetching: state.invoiceDetails.fetching,
+  page: state.invoiceDetails.page,
 })
 
 export default connect(mapStateToProps, { fetchUserInvoiceDetails, userInvoiceDetailDelete })(InvoiceDetails)

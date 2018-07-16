@@ -4,7 +4,8 @@ const initialState = {
   loading: false,
   fetching: true,
   items: [],
-  error: null
+  error: null,
+  page: 1,
 }
 
 const invoiceDetailReducer = (state = initialState, action) => {
@@ -27,7 +28,8 @@ const invoiceDetailReducer = (state = initialState, action) => {
       return {
         ...state,
         fetching: false,
-        items: action.payload.invoiceDetails,
+        items: state.items.concat(action.payload.invoiceDetails),
+        page: state.page + 1,
       }
 
     case actionTypes.USER_INVOICE_DETAILS_FETCH_FAILED:
@@ -38,9 +40,9 @@ const invoiceDetailReducer = (state = initialState, action) => {
       }
 
     case actionTypes.USER_INVOICE_DETAIL_GET_SUCCESS:
-      return{
+      return {
         ...state,
-        details: action.payload.item 
+        details: action.payload.item,
       }
 
     case actionTypes.USER_INVOICE_DETAIL_EDIT_SAVE:

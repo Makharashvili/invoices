@@ -11,6 +11,7 @@ import {
   fetchUserInvoiceDetailsWatcher,
   deleteUserInvoiceDetailWatcher,
   getUserInvoiceDetailWatcher,
+  saveUserInvoiceDetailWatcher,
 } from './invoices'
 
 export default function* rootSaga () {
@@ -25,5 +26,6 @@ export default function* rootSaga () {
     fetchUserInvoiceDetailsWatcher(),
     deleteUserInvoiceDetailWatcher(),
     getUserInvoiceDetailWatcher(),
+    saveUserInvoiceDetailWatcher(),
   ])
 }
