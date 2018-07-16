@@ -32,9 +32,15 @@ class EditInvoice extends React.Component {
   }
 
   handleSaveClick = () => {
-    this.state.invoiceId = this.props.match.params.id
+    const invoiceId = this.props.match.params.id
+
+    const params = {
+      ...this.state,
+      invoiceId
+    }
+
     this.props.saveUserInvoice(
-      this.state,
+      params,
       {
         resolve: () => { this.props.history.push('/user/5b40df1cf5906f2cc011dd46/invoices') },
         reject: () => {},

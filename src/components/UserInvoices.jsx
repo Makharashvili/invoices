@@ -17,10 +17,9 @@ class UserInvoices extends React.Component {
   }
 
   deleteInvoice = invoiceId => () => {
-    this.props.userInvoiceDelete
-    (
-      {invoiceId},
-      { 
+    this.props.userInvoiceDelete(
+      { invoiceId },
+      {
         resolve: () => { this.fetchUserInvoices() },
         reject: ()=> {}
       }

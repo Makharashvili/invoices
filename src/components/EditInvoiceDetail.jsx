@@ -35,9 +35,14 @@ class EditInvoiceDetail extends React.Component{
 
   handleSaveClick = () => {
     const { invoiceId, invoiceDetailId } = this.props.match.params
-    this.state.invoiceDetailId = invoiceDetailId
+
+    const params = {
+      ...this.state,
+      invoiceDetailId,
+    }
+
     this.props.saveUserInvoiceDetail(
-      this.state,
+      params,
       {
         resolve: () => { this.props.history.push(`/user/5b40df1cf5906f2cc011dd46/invoices/${invoiceId}/details`) },
         reject: () => {},

@@ -17,9 +17,8 @@ class InvoiceDetails extends React.Component{
   }
 
   deleteInvoiceDetail = invoiceDetailId => () => {
-    this.props.userInvoiceDetailDelete
-    (
-      {invoiceDetailId},
+    this.props.userInvoiceDetailDelete(
+      { invoiceDetailId },
       { 
         resolve: () => { this.fetchUserInvoiceDetails() },
         reject: ()=> {}
