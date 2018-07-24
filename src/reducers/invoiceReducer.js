@@ -28,8 +28,8 @@ const invoiceReducer = (state = initialState, action) => {
       return {
         ...state,
         fetching: false,
-        items: state.items.concat(action.payload.invoices),
-        page: state.page + 1,
+        items: action.payload.keepOldData ? state.items.concat(action.payload.invoices) : action.payload.invoices,
+        page: action.payload.keepOldData ? state.page + 1 : state.page,
       }
 
     case actionTypes.USER_INVOICES_FETCH_FAILED:

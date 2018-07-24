@@ -5,15 +5,18 @@ import { Link } from 'react-router-dom'
 import { fetchUserInvoices, userInvoiceDelete } from '../actions/invoices'
 
 class UserInvoices extends React.Component {
+  state = { searchValue: '' }
+
   componentDidMount() {
     this.fetchUserInvoices()
   }
 
-  fetchUserInvoices = () => {
+  fetchUserInvoices = (searchValue, page, keepOldData = true) => {
     const { id } = this.props.match.params
-    const { page } = this.props
+    const actualPage = page || this.props.page
+    const actualSearchValue = searchValue === undefined || typeof searchValue === 'object' ? this.state.searchValue : searchValue
 
-    this.props.fetchUserInvoices({ userId: id, page })
+    this.props.fetchUserInvoices({ userId: id, page: actualPage, searchValue: actualSearchValue, keepOldData })
   }
 
   deleteInvoice = invoiceId => () => {
@@ -34,6 +37,17 @@ class UserInvoices extends React.Component {
     return (
       <div>
         <h2>My Invoices</h2>
+
+        <div>
+          <input
+            onChange={(e) => {
+              this.fetchUserInvoices(e.target.value, 1, false)
+              this.setState({ searchValue: e.target.value })
+            }}
+            type="text"
+          />
+        </div>
+
         <div style={{ padding: 10, margin: 10 }}>
           {invoices.map(invoice => (
             <div style={{ border: '1px solid lightgray', marginBottom: 5, padding: 10, borderRadius: 5 }} key={invoice._id}>

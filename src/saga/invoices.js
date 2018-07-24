@@ -50,10 +50,16 @@ export function* createInvoiceDetailWatcher() {
 
 function* fetchUserInvoices(action) {
   try {
-    const { data } = yield call(makeRequest, 'get', `http://localhost:7070/users/${action.payload.userId}/invoices?page=${action.payload.page}`)
+    let requestUrl = `http://localhost:7070/users/${action.payload.userId}/invoices?page=${action.payload.page}`
+
+    if (action.payload.searchValue) {
+      requestUrl = `${requestUrl}&searchText=${action.payload.searchValue}`
+    }
+
+    const { data } = yield call(makeRequest, 'get', requestUrl)
 
     if (data.success) {
-      yield put(actions.userInvoicesFetched(data.items))
+      yield put(actions.userInvoicesFetched(data.items, action.payload.keepOldData))
     }
   } catch (error) {
     yield put(actions.userInvoiceFetchFailed(error))
