@@ -1,17 +1,17 @@
-import { takeEvery, call, put } from 'redux-saga/effects'
-import axios from 'axios'
+import { takeEvery, call, put, select } from 'redux-saga/effects'
+
+import makeRequest from '../makeRequest'
 
 import * as actionTypes from '../actionTypes'
 import * as actions from '../actions/invoices'
 
 function* createInvoice(action) {
   try {
-    const params = {
-      ...action.payload,
-      userId: '5b40df1cf5906f2cc011dd46',
-    }
+    const userId = yield select(state => state.auth.data.Id)
 
-    const { data } = yield call(axios.post, 'http://localhost:7070/invoices/create', params)
+    const params = { ...action.payload, userId }
+
+    const { data } = yield call(makeRequest, 'post', 'http://localhost:7070/invoices/create', params)
     if(data.success){
       yield put(actions.invoiceCreated())
       action.meta.resolve()
@@ -28,12 +28,11 @@ export function* createInvoiceWatcher() {
 
 function* createInvoiceDetail(action) {
   try {
-    const params = {
-      ...action.payload,
-      userId: '5b40df1cf5906f2cc011dd46',
-    }
+    const userId = yield select(state => state.auth.data.Id)
 
-    const { data } = yield call(axios.post, `http://localhost:7070/invoices/${action.payload.invoiceId}/details/create`, params)
+    const params = { ...action.payload, userId }
+
+    const { data } = yield call(makeRequest, 'post', `http://localhost:7070/invoices/${action.payload.invoiceId}/details/create`, params)
     if(data.success){
       yield put(actions.invoiceDetailCreated())
       action.meta.resolve()
@@ -51,7 +50,7 @@ export function* createInvoiceDetailWatcher() {
 
 function* fetchUserInvoices(action) {
   try {
-    const { data } = yield call(axios.get, `http://localhost:7070/users/${action.payload.userId}/invoices?page=${action.payload.page}`)
+    const { data } = yield call(makeRequest, 'get', `http://localhost:7070/users/${action.payload.userId}/invoices?page=${action.payload.page}`)
 
     if (data.success) {
       yield put(actions.userInvoicesFetched(data.items))
@@ -67,7 +66,7 @@ export function* fetchUserInvoicesWatcher() {
 
 function* fetchUserInvoiceDetails(action) {
   try {
-    const { data } = yield call(axios.get, `http://localhost:7070/invoices/${action.payload.invoiceId}/details?page=${action.payload.page}`)
+    const { data } = yield call(makeRequest, 'get', `http://localhost:7070/invoices/${action.payload.invoiceId}/details?page=${action.payload.page}`)
     if (data.success) {
       yield put(actions.userInvoiceDetailsFetched(data.items))
     }
@@ -82,7 +81,7 @@ export function* fetchUserInvoiceDetailsWatcher() {
 
 function* deleteUserInvoice(action){
   try{
-    const { data } = yield call(axios.delete, `http://localhost:7070/invoices/${action.payload.invoiceId}/delete`)
+    const { data } = yield call(makeRequest, 'delete', `http://localhost:7070/invoices/${action.payload.invoiceId}/delete`)
     if(data.success){
       action.meta.resolve()
     }
@@ -97,7 +96,7 @@ export function* deleteUserInvoiceWatcher() {
 
 function* deleteUserInvoiceDetail(action){
   try{
-    const { data } = yield call(axios.delete, `http://localhost:7070/invoices/details/${action.payload.invoiceDetailId}/delete`)
+    const { data } = yield call(makeRequest, 'delete', `http://localhost:7070/invoices/details/${action.payload.invoiceDetailId}/delete`)
     if(data.success){
       action.meta.resolve()
     }
@@ -112,7 +111,7 @@ export function* deleteUserInvoiceDetailWatcher() {
 
 function* getUserInvoice(action){
   try{
-    const { data } = yield call(axios.get, `http://localhost:7070/invoices/${action.payload.invoiceId}`)
+    const { data } = yield call(makeRequest, 'get', `http://localhost:7070/invoices/${action.payload.invoiceId}`)
     yield put(actions.getUserInvoiceFetched(data))
   } catch(error){
 
@@ -125,7 +124,7 @@ export function* getUserInvoiceWatcher() {
 
 function* getUserInvoiceDetail(action){
   try{
-    const { data } = yield call(axios.get, `http://localhost:7070/invoices/detail/${action.payload.invoiceDetailId}`)
+    const { data } = yield call(makeRequest, 'get', `http://localhost:7070/invoices/detail/${action.payload.invoiceDetailId}`)
     yield put(actions.getUserInvoiceDetailFetched(data))
   } catch(error){
 
@@ -137,7 +136,7 @@ export function* getUserInvoiceDetailWatcher() {
 }
 
 function* saveUserInvoice(action){
-  const { data } = yield call(axios.put, `http://localhost:7070/invoices/${action.payload.invoiceId}/edit`, action)
+  const { data } = yield call(makeRequest, 'put', `http://localhost:7070/invoices/${action.payload.invoiceId}/edit`, action)
   if (data.success) {
     action.meta.resolve()
   }
@@ -148,7 +147,7 @@ export function* saveUserInvoiceWatcher() {
 }
 
 function* saveUserInvoiceDetail(action){
-  const { data } = yield call(axios.put, `http://localhost:7070/invoices/details/${action.payload.invoiceDetailId}/edit`, action.payload)
+  const { data } = yield call(makeRequest, 'put', `http://localhost:7070/invoices/details/${action.payload.invoiceDetailId}/edit`, action.payload)
   if (data.success) {
     action.meta.resolve()
   }

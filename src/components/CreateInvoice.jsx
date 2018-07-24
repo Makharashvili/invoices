@@ -17,7 +17,7 @@ class Invoices extends React.Component {
     this.props.createInvoice(
       this.state,
       {
-        resolve: () => { this.props.history.push('/user/5b40df1cf5906f2cc011dd46/invoices') },
+        resolve: () => { this.props.history.push(`/user/${this.props.userId}/invoices`) },
         reject: () => {},
       }
     )
@@ -33,7 +33,7 @@ class Invoices extends React.Component {
         </div>
         <div>
           <span>date: </span>
-          <input onChange={(e) => this.setState({ date: e.target.value })}/>
+          <input type="date" onChange={(e) => this.setState({ date: e.target.value })}/>
         </div>
         <div>
           <span>description: </span>
@@ -57,6 +57,7 @@ class Invoices extends React.Component {
 
 const mapStateToProps = state => ({
   loading: state.invoices.loading,
+  userId: state.auth.data.Id
 })
 
 export default withRouter(connect(mapStateToProps, { createInvoice })(Invoices))

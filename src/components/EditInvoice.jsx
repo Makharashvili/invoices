@@ -42,7 +42,7 @@ class EditInvoice extends React.Component {
     this.props.saveUserInvoice(
       params,
       {
-        resolve: () => { this.props.history.push('/user/5b40df1cf5906f2cc011dd46/invoices') },
+        resolve: () => { this.props.history.push(`/user/${this.props.userId}/invoices`) },
         reject: () => {},
       }
     )
@@ -77,6 +77,7 @@ class EditInvoice extends React.Component {
 
 const mapStateToProps = state => ({
   details: state.invoices.details,
+  userId: state.auth.data.Id
 })
 
 const mapDispatchToProps = { getUserInvoice, saveUserInvoice }

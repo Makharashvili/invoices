@@ -1,6 +1,6 @@
 import { all } from 'redux-saga/effects'
 
-import { registerUserWatcher } from './auth'
+import { authUserWatcher, registerUserWatcher, checkToken } from './auth'
 import {
   createInvoiceWatcher,
   fetchUserInvoicesWatcher, 
@@ -16,6 +16,8 @@ import {
 
 export default function* rootSaga () {
   yield all([
+    checkToken(),
+    authUserWatcher(),
     registerUserWatcher(),
     createInvoiceWatcher(),
     fetchUserInvoicesWatcher(),
